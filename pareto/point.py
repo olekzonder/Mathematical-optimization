@@ -1,3 +1,4 @@
+from math import sqrt
 class Point:
     def __init__(self, f1,f2,number):
         self.f1 = f1
@@ -16,6 +17,7 @@ class Points:
         self.array = arr
         self.clusters = clusters
         self.optimal = []
+        self.centroids = [None]*len(self.clusters)
     def exclude_unoptimal(self):
         for i in self.array:
             if i.unoptimal == True:
@@ -50,5 +52,5 @@ class Points:
             i.efficiency=1/(1+(n/(len(self.array)-1)))
             clust_diff = []
             for j in self.clusters:
-                clust_diff.append(abs(i.efficiency-j))
+                clust_diff.append(sqrt((i.efficiency-j)**2))
             i.cluster_id = clust_diff.index(min(clust_diff))

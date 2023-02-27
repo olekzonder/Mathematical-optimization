@@ -39,7 +39,7 @@ def plot(points,type=None):
         case 1:
             k1 = False
             k2 = False
-            plt.title('Паретто-эффективные точки')
+            plt.title('Эффективные по Парето точки')
             for i in points.array:
                 if i.unoptimal:
                     if not k1:
@@ -49,7 +49,7 @@ def plot(points,type=None):
                         plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r')
                 else:
                     if not k2:
-                        plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g',label="Паретто-эффективная точка")
+                        plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g',label="Эффективная по Парето точка")
                         k2 = True
                     else:
                         plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g')
