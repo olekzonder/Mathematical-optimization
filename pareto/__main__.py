@@ -74,7 +74,7 @@ def plot(points,type=None):
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='y',label="K2=0.85")
                             k2 = True
                         else:
-                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r')
+                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='y')
                     case 2:
                         if not k3:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r',label="K3=0.75")
