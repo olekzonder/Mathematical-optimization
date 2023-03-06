@@ -1,4 +1,5 @@
 import subprocess
+import time
 from point import Point, Points
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -11,21 +12,21 @@ import os
 x = np.linspace(0,50,1000)
 y = np.linspace(0,50,1000)
 a,b = np.meshgrid(x,y)
-
+name = str(int(time.time()))
 def in_constraints(point):
-    if ((point.f1-25)**2+(point.f2-25)**2 - 25**2 <= 0) and ((-point.f1 + point.f2) - 25 <= 0) and ((point.f1+point.f2)-50 >= 0):
+    if ((point.f1-24)**2+(point.f2-24)**2 - 24**2 <= 0) and ((-point.f1 + point.f2) - 24 <= 0) and ((point.f1+point.f2)-48 >= 0):
         return True
     else:
         return False
 
 def plot(points,type=None):
-    C1 = (a-25)**2+(b-25)**2-625
+    C1 = (a-24)**2+(b-24)**2-576
     figure, axes = plt.subplots()
     axes.contour(a,b,C1, [0], colors=['#000000'])
-    y1 = (x+25)
-    y2 = (50-x)
-    plt.plot(x,y1,label='Ограничение 2: -f₁ + f₂ ≤ 25')
-    plt.plot(x,y2,label='Ограничение 3: f₁ + f₂ ≥ 50')
+    y1 = (x+24)
+    y2 = (48-x)
+    plt.plot(x,y1,label='Ограничение 2: -f₁ + f₂ ≤ 24')
+    plt.plot(x,y2,label='Ограничение 3: f₁ + f₂ ≥ 48')
     
     plt.xlabel('f₁')
     plt.ylabel('f₂')
@@ -68,7 +69,6 @@ def plot(points,type=None):
                             k1 = True
                         else:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g')
-                        plt.text(i.f1,i.f2,str(i.number))
                     case 1:
                         if not k2:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='y',label="K2=0.85")
@@ -81,9 +81,11 @@ def plot(points,type=None):
                             k3 = True
                         else:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r')
-                plt.text(i.f1,i.f2,str(i.number))
+                if len(points.array) < 100:
+                    plt.text(i.f1,i.f2,str(i.number))
     plt.legend(loc="best")
-    plt.savefig('График '+str(type)+'.png')
+    plt.savefig(name+'.png')
+    print("График сохранён как:",name+'.png')
     plt.show()
 def random_gen(n):
     arr = []
@@ -111,9 +113,7 @@ def file_gen(file):
     return Points(points)
 
 def to_csv(points,type=None):
-    file = filedialog.asksaveasfilename(defaultextension='.csv')
-    if file == ():
-        return
+    file = name+'.csv'
     with open(file,'w',newline='') as csvfile:
         writer = csv.writer(csvfile,dialect='excel')
         if type == 1:
@@ -129,7 +129,8 @@ def to_csv(points,type=None):
                 else:
                     lst = [i.number,i.f1,i.f2,str(i.n),round(i.efficiency,2),"K"+str(i.cluster_id+1)]
                 writer.writerow(lst)
-    subprocess.call(('xdg-open', file))
+    print('Таблица сохранена как:',name+'.csv')
+    # subprocess.call(('xdg-open', file))
 def clear():
     if(os.name == 'posix'):
         os.system('clear')
@@ -171,7 +172,6 @@ if choice == 0:
         quit()
 
 while True:
-    clear()
     print("[1] Алгоритм исключения заведомо неэффективных решений")
     print("[2] Кластеризация множества проектов")
     print("[0] Выход")
@@ -186,11 +186,13 @@ while True:
             continue
     match choice:
         case 1:
+            name = str(int(time.time()))
             points.exclude_unoptimal()
             plot(points,type=1)
             to_csv(points,type=1)
             print()
         case 2:
+            name = str(int(time.time()))
             points.efficiency_index()
             plot(points,type=2)
             to_csv(points,type=2)

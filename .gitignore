@@ -1,4 +1,8 @@
-__pycache__/*
-*.png
 *.csv
-*.txt
+*.png
+./.vscode
+*.tex
+*.pdf
+*/media/*
+*.pyc
+*/__pycache__/*
