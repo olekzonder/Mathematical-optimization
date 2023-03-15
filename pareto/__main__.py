@@ -1,5 +1,7 @@
 import subprocess
 import time
+
+from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 from point import Point, Points
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -13,6 +15,7 @@ x = np.linspace(0,50,1000)
 y = np.linspace(0,50,1000)
 a,b = np.meshgrid(x,y)
 name = str(int(time.time()))
+u_points = []
 def in_constraints(point):
     if ((point.f1-24)**2+(point.f2-24)**2 - 24**2 <= 0) and ((-point.f1 + point.f2) - 24 <= 0) and ((point.f1+point.f2)-48 >= 0):
         return True
@@ -20,18 +23,33 @@ def in_constraints(point):
         return False
 
 def plot(points,type=None):
-    C1 = (a-24)**2+(b-24)**2-576
+    # C1 = (a-24)**2+(b-24)**2-576
     figure, axes = plt.subplots()
-    axes.contour(a,b,C1, [0], colors=['#000000'])
-    y1 = (x+24)
-    y2 = (48-x)
-    plt.plot(x,y1,label='Ограничение 2: -f₁ + f₂ ≤ 24')
-    plt.plot(x,y2,label='Ограничение 3: f₁ + f₂ ≥ 48')
+    # axes.contour(a,b,C1, [0], colors=['#000000'])
+    # y1 = (x+24)
+    # y2 = (48-x)
+    # plt.plot(x,y1,label='Ограничение 2: -f₁ + f₂ ≤ 24')
+    # plt.plot(x,y2,label='Ограничение 3: f₁ + f₂ ≥ 48')
     
     plt.xlabel('f₁')
     plt.ylabel('f₂')
     plt.axis("equal")
     plt.grid()
+    plt.xlim(0,50)
+    plt.ylim(0,50)
+    axes.set_xlim(xmin=0)
+    axes.set_ylim(ymin=0)
+    # axes.spines[["left", "bottom"]].set_position(("data", 0))
+    axes.spines["top"].set_visible(False)
+    axes.spines["right"].set_visible(False)
+    # axes.plot(1, 0, ">k", transform=axes.get_yaxis_transform(), clip_on=False)
+    # axes.plot(0, 1, "^k", transform=axes.get_xaxis_transform(), clip_on=False)
+    axes.xaxis.set_major_locator(MultipleLocator(5))
+    axes.yaxis.set_major_locator(MultipleLocator(5))
+    axes.xaxis.set_minor_locator(AutoMinorLocator(5))
+    axes.yaxis.set_minor_locator(AutoMinorLocator(5))
+    axes.grid(which='major', color='#CCCCCC', linestyle='--')
+    axes.grid(which='minor', color='#CCCCCC', linestyle=':')
     match(type):
         case None:
             for i in points.array:
@@ -40,17 +58,16 @@ def plot(points,type=None):
         case 1:
             k1 = False
             k2 = False
-            plt.title('Эффективные по Парето точки')
             for i in points.array:
                 if i.unoptimal:
                     if not k1:
-                        plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r',label="Неэффективная точка")
+                        plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r')
                         k1 = True
                     else:
                         plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r')
                 else:
                     if not k2:
-                        plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g',label="Эффективная по Парето точка")
+                        plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g')
                         k2 = True
                     else:
                         plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g')
@@ -65,19 +82,19 @@ def plot(points,type=None):
                 match i.cluster_id:
                     case 0:
                         if not k1:
-                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g',label="K1=1")
+                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g',label="K1")
                             k1 = True
                         else:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='g')
                     case 1:
                         if not k2:
-                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='y',label="K2=0.85")
+                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='y',label="K2")
                             k2 = True
                         else:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='y')
                     case 2:
                         if not k3:
-                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r',label="K3=0.75")
+                            plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r',label="K3")
                             k3 = True
                         else:
                             plt.plot(i.f1,i.f2,marker='o',markersize='5',color='r')
@@ -99,7 +116,7 @@ def random_gen(n):
     return Points(arr)    
 
 def file_gen(file):
-    arr = [i.split(',') for i in file.read().split('\n')][:-1]
+    arr = [i.split(',') for i in file.read().split('\n')]
     points = []
     n = 1
     for i in arr:
@@ -170,7 +187,7 @@ if choice == 2:
     points = random_gen(n)
 if choice == 0:
         quit()
-
+plot(points)
 while True:
     print("[1] Алгоритм исключения заведомо неэффективных решений")
     print("[2] Кластеризация множества проектов")
