@@ -33,17 +33,15 @@ def plot(points,type=None):
     
     plt.xlabel('f₁')
     plt.ylabel('f₂')
-    plt.axis("equal")
-    plt.grid()
     plt.xlim(0,50)
     plt.ylim(0,50)
-    axes.set_xlim(xmin=0)
-    axes.set_ylim(ymin=0)
-    # axes.spines[["left", "bottom"]].set_position(("data", 0))
+    axes.set_xlim(xmin=0,xmax=50)
+    axes.set_ylim(ymin=0,ymax=50)
+    axes.spines[["left", "bottom"]].set_position(("data", 0))
     axes.spines["top"].set_visible(False)
     axes.spines["right"].set_visible(False)
-    # axes.plot(1, 0, ">k", transform=axes.get_yaxis_transform(), clip_on=False)
-    # axes.plot(0, 1, "^k", transform=axes.get_xaxis_transform(), clip_on=False)
+    axes.plot(1, 0, ">k", transform=axes.get_yaxis_transform(), clip_on=False)
+    axes.plot(0, 1, "^k", transform=axes.get_xaxis_transform(), clip_on=False)
     axes.xaxis.set_major_locator(MultipleLocator(5))
     axes.yaxis.set_major_locator(MultipleLocator(5))
     axes.xaxis.set_minor_locator(AutoMinorLocator(5))
@@ -77,7 +75,6 @@ def plot(points,type=None):
             k1 = False
             k2 = False
             k3 = False
-            plt.title('Кластеризация точек')
             for i in points.array:
                 match i.cluster_id:
                     case 0:
@@ -108,10 +105,10 @@ def random_gen(n):
     arr = []
     for i in range(n):
         while True:
-            f1 = random.uniform(0,60)
-            f2 = random.uniform(0,60)
-            if in_constraints(Point(f1,f2,i+1)):
-                break
+            f1 = int(random.uniform(0,50))
+            f2 = int(random.uniform(0,50))
+            # if in_constraints(Point(f1,f2,i+1)):
+            break
         arr.append(Point(f1,f2,i+1))
     return Points(arr)    
 
@@ -122,9 +119,9 @@ def file_gen(file):
     for i in arr:
         f1 = float(i[0])
         f2 = float(i[1])
-        if not in_constraints(Point(f1,f2,n)):
-            print("Ошибка в точке",n)
-            raise ValueError
+        # if not in_constraints(Point(f1,f2,n)):
+        #     print("Ошибка в точке",n)
+        #     raise ValueError
         points.append(Point(f1,f2,n))
         n += 1
     return Points(points)
