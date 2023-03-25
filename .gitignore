@@ -1,6 +1,6 @@
 *.csv
 *.png
-./.vscode
+.vscode
 *.tex
 *.pdf
 */media/*
