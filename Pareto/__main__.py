@@ -23,14 +23,7 @@ def in_constraints(point):
         return False
 
 def plot(points,type=None):
-    # C1 = (a-24)**2+(b-24)**2-576
     figure, axes = plt.subplots()
-    # axes.contour(a,b,C1, [0], colors=['#000000'])
-    # y1 = (x+24)
-    # y2 = (48-x)
-    # plt.plot(x,y1,label='Ограничение 2: -f₁ + f₂ ≤ 24')
-    # plt.plot(x,y2,label='Ограничение 3: f₁ + f₂ ≥ 48')
-    
     plt.xlabel('f₁')
     plt.ylabel('f₂')
     plt.xlim(0,50)
@@ -107,7 +100,6 @@ def random_gen(n):
         while True:
             f1 = int(random.uniform(0,50))
             f2 = int(random.uniform(0,50))
-            # if in_constraints(Point(f1,f2,i+1)):
             break
         arr.append(Point(f1,f2,i+1))
     return Points(arr)    
@@ -119,9 +111,6 @@ def file_gen(file):
     for i in arr:
         f1 = float(i[0])
         f2 = float(i[1])
-        # if not in_constraints(Point(f1,f2,n)):
-        #     print("Ошибка в точке",n)
-        #     raise ValueError
         points.append(Point(f1,f2,n))
         n += 1
     return Points(points)
@@ -144,7 +133,7 @@ def to_csv(points,type=None):
                     lst = [i.number,i.f1,i.f2,str(i.n),round(i.efficiency,2),"K"+str(i.cluster_id+1)]
                 writer.writerow(lst)
     print('Таблица сохранена как:',name+'.csv')
-    # subprocess.call(('xdg-open', file))
+    
 def clear():
     if(os.name == 'posix'):
         os.system('clear')
